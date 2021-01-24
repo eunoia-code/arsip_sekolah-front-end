@@ -14,6 +14,9 @@ import VueSimpleAlert from "vue-simple-alert";
 import '@fortawesome/fontawesome-free/css/all.css';
 import '@fortawesome/fontawesome-free/js/all.js';
 
+import moment from 'moment';
+import VueHtmlToPaper from 'vue-html-to-paper';
+
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import AxiosPlugin from 'vue-axios-cors';
@@ -21,8 +24,43 @@ import AxiosPlugin from 'vue-axios-cors';
 let vuePlugins = [
   Vuetify, AxiosPlugin, VueTailwindPicker, VueSimpleAlert
 ];
-vuePlugins.forEach((x) => Vue.use(x));
+vuePlugins.forEach((x) => {
+  Vue.use(x)
+});
+
+const options = {
+  name: '_blank',
+  specs: [
+    'fullscreen=yes',
+    'titlebar=yes',
+    'scrollbars=yes'
+  ],
+  styles: [
+    'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+    'https://unpkg.com/kidlat-css/css/kidlat.css'
+  ]
+}
+Vue.use(VueHtmlToPaper, options)
+
 Vue.config.productionTip = false;
+
+Vue.filter('format_tanggal', (value:any) => {
+  if(value){
+    return moment(String(value)).format('DD-MM-YYYY')
+  }
+})
+
+Vue.filter('tanggal_dan_nama_bulan', (value:any) => {
+  if(value){
+    return moment(String(value)).locale('id').format('DD MMMM YYYY')
+  }
+})
+
+Vue.filter('nama_hari', (value:any) => {
+  if(value){
+    return moment(String(value)).locale('id').format('dddd')
+  }
+})
 
 new Vue({
   router,

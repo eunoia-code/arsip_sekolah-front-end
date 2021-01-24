@@ -93,7 +93,7 @@
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="nomor_surat">
                     Nomor Surat
                   </label>
-                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="nomor_surat" type="text" placeholder="Nomor Surat" v-model="addData.nomor_surat" required>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="nomor_surat" type="text" placeholder="Nomor Surat" v-model="nomor_surat" disabled required>
                   <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
                 <div class="w-full md:w-1/2 px-3">
@@ -101,28 +101,6 @@
                     Asal Surat
                   </label>
                   <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="asal_surat" type="text" placeholder="Asal Surat" v-model="addData.asal_surat" required>
-                </div>
-              </div>
-              <div class="flex flex-wrap -mx-3 mb-6">
-                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="kode_klasifikasi">
-                    Kode Klasifikasi
-                  </label>
-                  <div class="relative">
-                    <select class="block appearance-none w-full bg-gray-200 border border-red-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 focus:shadow-outline hover:shadow-outline" v-model="addData.id_referensi" id="grid-kode_klasifikasi">
-                      <option selected disabled>-- Pilih Kode Klasifikasi --</option>
-                      <option v-for="k in klasifikasi" :value="k.id_referensi">{{k.kode}}. {{k.nama}}</option>
-                    </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                    </div>
-                  </div>
-                </div>
-                <div class="w-full md:w-1/2 px-3">
-                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="nomor_agenda">
-                    Nomor Agenda
-                  </label>
-                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="nomor_agenda" type="text" placeholder="Nomor Agenda" v-model="addData.nomor_agenda" required>
                 </div>
               </div>
               <div class="flex flex-wrap -mx-3 mb-6">
@@ -349,6 +327,8 @@ export default {
       dateChanged: false,
       selectedData: {},
       success_message: '',
+      nomor_surat: '',
+      nomor_agenda: 0,
       search: '',
       headers: [
         { text: 'No.', value: 'num' },
@@ -385,6 +365,28 @@ export default {
         .then(response => (this.surat_masuk_data = response.data['data']))
         .catch(error => console.log(error));
     },
+    getNomorSurat: function(){
+      const options = {
+        url: `${api_url}nomor/428`,
+        method: 'GET'
+      }
+
+      this.$axios(options)
+        .then(response => {
+          this.nomor_agenda = Number(response.data['data'].nomor_agenda) + 1;
+          this.nomor_surat = '428/' + (this.nomor_agenda<10 ? '0'+this.nomor_agenda : this.nomor_agenda) +'/2021'
+        })
+        .catch(error => console.log(error));
+    },
+    editNomorSurat: function(){
+      this.$axios
+        .put(`${api_url}nomor/428`, {nomor_agenda: this.nomor_agenda})
+        .then(data => {
+          this.getData();
+        }).catch(err => {
+          console.error(err);
+        });
+    },
     getKlasifikasi: function(){
       const options = {
         url: `${api_url}referensi`,
@@ -402,7 +404,7 @@ export default {
     addDataSuratMasuk: function(e){
       this.$axios
         .post(`${api_url}surat_masuk/`, {
-            nomor_surat: `${this.addData.nomor_surat}`,
+            nomor_surat: `${this.nomor_surat}`,
             asal_surat: `${this.addData.asal_surat}`,
             isi_surat: `${this.addData.isi_surat}`,
             id_referensi: `${this.addData.id_referensi}`,
@@ -416,6 +418,7 @@ export default {
         .then((data) => {
           this.getData();
           this.toggleAddModal();
+          this.editNomorSurat();
           this.successMessage('ditambahkan');
         }).catch(err => {
           console.error(err);
@@ -513,6 +516,7 @@ export default {
   },
   mounted() {
     this.getData();
+    this.getNomorSurat();
   }
 }
 </script>
