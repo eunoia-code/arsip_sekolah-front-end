@@ -257,8 +257,8 @@
             </button>
           </div>
           <!--body-->
-          <div class="relative p-10 flex-auto">
-            <table id="surat_cinta" border="10px" style="margin:10px; padding:5px; width:100%; border-collapse: collapse;">
+          <div id="surat_cinta" class="relative p-10 flex-auto" style="margin:10px;padding:5px;">
+            <table style="margin:10px; padding:5px; width:100%;">
               <tr style="">
                 <td style="width:100px"></td>
                 <td style="width:20%"></td>
@@ -272,10 +272,10 @@
                   <img src="../../assets/a.png">
                 </td>
                 <td style="text-align:center" colspan="4">
-                  <h1>PEMERINTAH KABUPATEN KOLAKA TIMUR</h1>
-                  <h1>DINAS PENDIDIKAN KEPEMUDAAN DAN OLAHRAGA</h1>
-                  <h1><b>SMP NEGERI SATU ATAP 1 AERE</b></h1>
-                  <h1><b>NPSN: 40404649</b></h1>
+                  <h4>PEMERINTAH KABUPATEN KOLAKA TIMUR</h4>
+                  <h4>DINAS PENDIDIKAN KEPEMUDAAN DAN OLAHRAGA</h4>
+                  <h4><b>SMP NEGERI SATU ATAP 1 AERE</b></h4>
+                  <h4><b>NPSN: 40404649</b></h4>
                   <small> <i>Alamat: Desa Iwoimenggura Kec. Aere Kab. Kolaka Timur</i> </small><br>
                   <small> <i>email: smpnsatap1 aere@gmail.com</i> </small>
                 </td>
@@ -410,9 +410,9 @@
               <button class="text-black bg-gray-200 border border-solid border-gray-500 hover:bg-gray-200 hover:bg-gray-400 active:bg-gray-500 font-bold uppercase text-sm px-6 py-2 rounded outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="toggleShowModal">
                 Close
               </button>
-              <!-- <button type="button" class="text-black bg-teal-400 hover:bg-teal-600 rounded background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"  style="transition: all .15s ease" @click="print">
+              <button type="button" class="text-black bg-teal-400 hover:bg-teal-600 rounded background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1"  style="transition: all .15s ease" @click="print">
                 Cetak
-              </button> -->
+              </button>
             </div>
         </div>
       </div>
