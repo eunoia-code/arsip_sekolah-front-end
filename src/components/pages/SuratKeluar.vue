@@ -56,6 +56,9 @@
             <td>{{row.item.tanggal_surat | format_tanggal}}</td>
             <td style="width:auto">
               <div class="flex justify-center">
+                <a :href="'http://localhost:8080/uploads/surat_keluar/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
+                    <i class="fas fa-file-pdf"></i>
+                </a>
                 <button class="text-black bg-teal-500 border border-solid border-teal-600 font-bold hover:bg-teal-400 active:bg-teal-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="showDataSuratKeluar(row.item)" title="Lihat Data">
                     <i class="fas fa-eye"></i>
                 </button>
@@ -91,7 +94,7 @@
           <!--body-->
           <form @submit.prevent="addDataSuratKeluar" id="addSuratKeluarForm">
             <div class="relative p-6 flex-auto">
-              <div class="flex flex-wrap -mx-3 mb-6">
+              <div class="flex flex-wrap -mx-3">
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="nomor_surat">
                     Nomor Surat
@@ -106,16 +109,26 @@
                   <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="tujuan" type="text" placeholder="Tujuan" v-model="addData.tujuan" required>
                 </div>
               </div>
-              <div class="flex flex-wrap -mx-3 mb-6">
-                <div class="w-full md:w-full px-3 mb-6 md:mb-0">
+              <div class="flex flex-wrap -mx-3">
+                <div class="w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="perihal">
                     Perihal
                   </label>
                   <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="perihal" type="text" placeholder="Perihal..." v-model="addData.perihal" required>
                   <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
+                <div class="w-1/2 px-3">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="tanggal_surat">
+                    Tanggal Surat
+                  </label>
+                  <VueTailwindPicker id="tanggal_surat"
+                    @change="(v) => {this.selectDate(v)}"
+                  >
+                      <input type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline focus:border-gray-500" v-model="addData.tanggal_surat" required />
+                  </VueTailwindPicker>
+                </div>
               </div>
-              <div class="flex flex-wrap -mx-3 mb-6">
+              <div class="flex flex-wrap -mx-3">
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="tempat">
                     Tempat
@@ -130,7 +143,7 @@
                   <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="waktu" type="text" placeholder="Waktu" v-model="addData.waktu" required>
                 </div>
               </div>
-              <div class="flex flex-wrap -mx-3 mb-6">
+              <div class="flex flex-wrap -mx-3">
                 <div class="w-full px-3">
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="isi_surat">
                     Isi Surat (Ringkasan)
@@ -139,16 +152,18 @@
                   <p class="text-gray-600 text-xs italic">Ringkasan Surat</p>
                 </div>
               </div>
-              <div class="flex flex-wrap -mx-3 mb-2">
-                <div class="w-full px-3">
-                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="tanggal_surat">
-                    Tanggal Surat
-                  </label>
-                  <VueTailwindPicker id="tanggal_surat"
-                    @change="(v) => {this.selectDate(v)}"
-                  >
-                      <input type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline focus:border-gray-500" v-model="addData.tanggal_surat" required />
-                  </VueTailwindPicker>
+              <div class="flex flex-wrap -mx-3 mb-2 mt-2">
+                <div class="w-full md:w-full px-3">
+                    <label class="block font-bold uppercase tracking-wide text-gray-700 text-xs font-light mb-1">Pilih Dokumen</label>
+                    <div class="relative">
+                        <label class="appearance-none flex w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white-500 <?= ($validation->hasError('dokumentasi')) ? 'border-red-400' : ''; ?>">
+                            <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                            </svg>&nbsp;
+                            <span class="mt-2 text-base leading-normal" id="addFile"> {{add_filename!=='' ? add_filename['name'] : 'Pilih Dokumen'}}</span>
+                            <input type='file' name="file" id="file" class="hidden" ref="file_dokumen" accept="application/pdf" @change="changeName('add')" />
+                        </label>
+                    </div>
                 </div>
               </div>
             </div>
@@ -187,41 +202,77 @@
           <!--body-->
           <form @submit.prevent="editDataSuratKeluar" id="editSuratKeluarForm">
             <div class="relative p-6 flex-auto">
-              <div class="flex flex-wrap -mx-3 mb-6">
+              <input id="eid_surat_masuk" type="hidden" v-model="editData.id_surat_keluar" required>
+              <div class="flex flex-wrap -mx-3">
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                  <input id="eid_surat_masuk" type="hidden" v-model="editData.id_surat_masuk" required>
-                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="enomor_surat">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="nomor_surat">
                     Nomor Surat
                   </label>
-                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="enomor_surat" type="text" placeholder="Nomor Surat" v-model="editData.nomor_surat" required>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="enomor_surat" type="text" placeholder="Nomor Surat" v-model="editData.nomor_surat" disabled required>
                   <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
                 <div class="w-full md:w-1/2 px-3">
-                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="etujuan">
-                    tujuan
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="tujuan">
+                    Tujuan
                   </label>
-                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="etujuan" type="text" placeholder="Asal Surat" v-model="editData.tujuan" required>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="tujuan" type="text" placeholder="Tujuan" v-model="editData.tujuan" required>
                 </div>
               </div>
-              <div class="flex flex-wrap -mx-3 mb-6">
+              <div class="flex flex-wrap -mx-3">
+                <div class="w-1/2 md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="perihal">
+                    Perihal
+                  </label>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="perihal" type="text" placeholder="Perihal..." v-model="editData.perihal" required>
+                  <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
+                </div>
+                <div class="w-1/2 px-3">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="tanggal_surat">
+                    Tanggal Surat
+                  </label>
+                  <VueTailwindPicker id="etanggal_surat"
+                    @change="(v) => {this.changeEditDate(v)}"
+                  >
+                      <input type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline focus:border-gray-500" v-model="editData.tanggal_surat" required />
+                  </VueTailwindPicker>
+                </div>
+              </div>
+              <div class="flex flex-wrap -mx-3">
+                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="tempat">
+                    Tempat
+                  </label>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="tempat" type="text" placeholder="Tempat" v-model="editData.tempat" required>
+                  <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
+                </div>
+                <div class="w-full md:w-1/2 px-3">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="waktu">
+                    Waktu
+                  </label>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="waktu" type="text" placeholder="Waktu" v-model="editData.waktu" required>
+                </div>
+              </div>
+              <div class="flex flex-wrap -mx-3">
                 <div class="w-full px-3">
-                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="eisi_surat">
+                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="isi_surat">
                     Isi Surat (Ringkasan)
                   </label>
-                  <textarea class="resize-y appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="eisi_surat" v-model="editData.isi_surat" required></textarea>
+                  <textarea class="resize-y appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="isi_surat" v-model="editData.isi_surat" required></textarea>
                   <p class="text-gray-600 text-xs italic">Ringkasan Surat</p>
                 </div>
               </div>
               <div class="flex flex-wrap -mx-3 mb-2">
-                <div class="w-full px-3">
-                  <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="etanggal_surat">
-                    Tanggal Surat
-                  </label>
-                  <VueTailwindPicker id="etanggal_surat"
-                    @change="(v) => { this.changeEditDate(v) }"
-                  >
-                      <input type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline focus:border-gray-500" v-model="editData.tanggal_surat" required />
-                  </VueTailwindPicker>
+                <div class="w-full md:w-full px-3">
+                    <label class="block font-bold uppercase tracking-wide text-gray-700 text-xs font-light mb-1">Pilih Dokumen</label>
+                    <div class="relative">
+                        <label class="appearance-none flex w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white-500 <?= ($validation->hasError('dokumentasi')) ? 'border-red-400' : ''; ?>">
+                            <svg class="w-8 h-8" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M16.88 9.1A4 4 0 0 1 16 17H5a5 5 0 0 1-1-9.9V7a3 3 0 0 1 4.52-2.59A4.98 4.98 0 0 1 17 8c0 .38-.04.74-.12 1.1zM11 11h3l-4-4-4 4h3v3h2v-3z" />
+                            </svg>&nbsp;
+                            <span class="mt-2 text-base leading-normal" id="addFile"> {{edit_filename!=='' ? edit_filename['name'] : 'Pilih Dokumen Baru'}}</span>
+                            <input type='file' name="file" id="file" class="hidden" ref="file_dokumen" accept="application/pdf" @change="changeName('edit')" />
+                        </label>
+                    </div>
                 </div>
               </div>
             </div>
@@ -424,7 +475,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import VueTailwindPicker from 'vue-tailwind-picker';
 const api_url = 'http://localhost:8080/api/';
 
@@ -446,6 +496,8 @@ export default {
       success_message: '',
       nomor_surat: '',
       nomor_agenda: 0,
+      add_filename: '',
+      edit_filename: '',
       output: null,
       search: '',
       headers: [
@@ -482,7 +534,7 @@ export default {
         method: 'GET'
       }
 
-      this.$axios(options)
+      this.$api(options)
         .then(response => (this.surat_keluar_data = response.data['data']))
         .catch(error => console.log(error));
     },
@@ -492,7 +544,7 @@ export default {
         method: 'GET'
       }
 
-      this.$axios(options)
+      this.$api(options)
         .then(response => {
           this.nomor_agenda = Number(response.data['data'].nomor_agenda) + 1;
           this.nomor_surat = '428/' + (this.nomor_agenda<10 ? '0'+this.nomor_agenda : this.nomor_agenda) +'/2021'
@@ -500,7 +552,7 @@ export default {
         .catch(error => console.log(error));
     },
     editNomorSurat: function(){
-      this.$axios
+      this.$api
         .put(`${api_url}nomor/428`, {nomor_agenda: this.nomor_agenda})
         .then(data => {
           this.getData();
@@ -511,26 +563,35 @@ export default {
     toggleAddModal: function(){
       this.addModal = !this.addModal
     },
+    changeName: function(k){
+      if(k=='add')
+        this.add_filename = this.$refs.file_dokumen.files[0]
+      else if (k=='edit') {
+        this.edit_filename = this.$refs.file_dokumen.files[0]
+      }
+      console.log(this.add_filename);
+    },
     addDataSuratKeluar: function(e){
-      this.$axios
-        .post(`${api_url}surat_keluar/`, {
-            nomor_surat: `${this.nomor_surat}`,
-            tujuan: `${this.addData.tujuan}`,
-            perihal: `${this.addData.perihal}`,
-            waktu: `${this.addData.waktu}`,
-            tempat: `${this.addData.tempat}`,
-            isi_surat: `${this.addData.isi_surat}`,
-            tanggal_surat: `${this.addData.tanggal_surat}`
-          }, {
-          headers: {
-            'Content-type': 'application/x-www-form-urlencoded',
-          },
-         })
-        .then((data) => {
+      const formData = new FormData();
+      if(this.add_filename!=='')
+        formData.append("file_dokumen", this.add_filename);
+
+      formData.append("nomor_surat", this.nomor_surat);
+      formData.append("tujuan", this.addData.tujuan);
+      formData.append("perihal", this.addData.perihal);
+      formData.append("waktu", this.addData.waktu);
+      formData.append("tempat", this.addData.tempat);
+      formData.append("isi_surat", this.addData.isi_surat);
+      formData.append("tanggal_surat", this.addData.tanggal_surat);
+
+      this.$api
+        .post('surat_keluar/', formData).then((data) => {
+          console.log(data);
           this.getData();
           this.toggleAddModal();
           this.editNomorSurat();
           this.successMessage('ditambahkan');
+          this.reset();
         }).catch(err => {
           console.error(err);
         });
@@ -550,7 +611,7 @@ export default {
     },
     selectDataSuratKeluar: function(row){
       this.toggleEditModal()
-
+      console.log(row);
       this.editData = {
         id_surat_keluar: `${row.id_surat_keluar}`,
         nomor_surat: `${row.nomor_surat}`,
@@ -559,7 +620,8 @@ export default {
         tempat: `${row.tempat}`,
         tujuan: `${row.tujuan}`,
         isi_surat: `${row.isi_surat}`,
-        tanggal_surat: `${row.tanggal_surat}`
+        tanggal_surat: `${row.tanggal_surat}`,
+        file: `${row.file}`
       }
       this.dateChanged = false;
     },
@@ -579,15 +641,30 @@ export default {
       this.dateChanged = false;
     },
     editDataSuratKeluar: function(){
-      this.$axios
-        .put(`${api_url}surat_keluar/${this.editData.id_surat_keluar}`, this.editData)
+      const formData = new FormData();
+      if(this.edit_filename!=='')
+        formData.append("file_dokumen", this.edit_filename);
+
+      formData.append("nomor_surat", this.editData.nomor_surat);
+      formData.append("tujuan", this.editData.tujuan);
+      formData.append("waktu", this.editData.waktu);
+      formData.append("perihal", this.editData.perihal);
+      formData.append("tempat", this.editData.tempat);
+      formData.append("isi_surat", this.editData.isi_surat);
+      formData.append("tanggal_surat", this.editData.tanggal_surat);
+      formData.append("file_lama", this.editData.file);
+
+      this.$api
+        .post(`/surat_keluar/update/${this.editData.id_surat_keluar}`, formData)
         .then(data => {
+          console.log(data);
           this.getData();
           this.toggleEditModal();
           this.successMessage('diupdate');
         }).catch(err => {
           console.error(err);
         });
+
     },
     changeEditDate: function(v){
       this.dateChanged ? this.editData.tanggal_surat = v : this.editData.tanggal_surat;
@@ -596,9 +673,10 @@ export default {
     deleteDataSuratKeluar: function(id){
       this.$confirm("Apakah Kamu yakin ingin menghapus data ini?").then(conf => {
         if(conf){
-          this.$axios
+          this.$api
             .delete(`${api_url}surat_keluar/${id}`)
             .then(data => {
+              console.log(data);
               this.getData();
               this.successMessage('dihapus');
             }).catch(err => {
@@ -609,6 +687,10 @@ export default {
     },
     successMessage: function(msg){
       this.success_message = msg;
+    },
+    reset: function(){
+      this.addData={};
+      this.editData={};
     },
     print() {
       // Pass the element id here

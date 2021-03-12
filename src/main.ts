@@ -19,10 +19,11 @@ import VueHtmlToPaper from 'vue-html-to-paper';
 
 import axios from 'axios';
 import VueAxios from 'vue-axios';
-import AxiosPlugin from 'vue-axios-cors';
+// import AxiosPlugin from 'vue-axios-cors';
+import { api } from "./plugins/axios";
 
 let vuePlugins = [
-  Vuetify, AxiosPlugin, VueTailwindPicker, VueSimpleAlert
+  Vuetify, VueTailwindPicker, VueSimpleAlert
 ];
 vuePlugins.forEach((x) => {
   Vue.use(x)
@@ -65,6 +66,7 @@ Vue.filter('nama_hari', (value:any) => {
 new Vue({
   router,
   store,
+  api,
   vuetify: new Vuetify(),
   render: (h) => h(App),
 }).$mount('#app');
