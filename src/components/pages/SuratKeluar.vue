@@ -18,6 +18,9 @@
       <v-spacer></v-spacer>
       <button @click="toggleAddModal" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
         <i class="fa fa-plus"></i> Tambah Data
+      </button> &nbsp;
+      <button @click="exportExcel('myTable', 'Tabel Surat Keluar', 'surat keluar.xls')" class="bg-green-700 hover:bg-blue-900 text-white px-2 rounded">
+        <i class="fas fa-file-excel"></i> Export Data
       </button>
     </v-card-title>
     <v-card-title>
@@ -32,6 +35,7 @@
     </v-card-title>
     <div class="" data-app>
       <v-data-table
+        ref="table"
         :headers="headers"
         :items="items"
         :search="search"
@@ -73,6 +77,32 @@
           </tr>
         </template>
       </v-data-table>
+      <table id="myTable" class="hidden">
+        <thead>
+          <th>No.</th>
+          <th>No. Surat</th>
+          <th>Tujuan</th>
+          <th>Perihal</th>
+          <th>Tempat</th>
+          <th>Waktu</th>
+          <th>Isi Surat</th>
+          <th>Tanggal Surat</th>
+          <th>Ket.</th>
+        </thead>
+        <tbody>
+          <tr v-for="item, index in items" :key="item.key">
+            <td>{{index+1}}</td>
+            <td>{{item.nomor_surat}}</td>
+            <td>{{item.tujuan}}</td>
+            <td>{{item.perihal}}</td>
+            <td>{{item.tempat}}</td>
+            <td>{{item.waktu}}</td>
+            <td>{{item.isi_surat}}</td>
+            <td>{{item.tanggal_surat}}</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <!-- ADD MODAL -->
@@ -695,6 +725,19 @@ export default {
     print() {
       // Pass the element id here
       this.$htmlToPaper('surat_cinta');
+    },
+    exportExcel(table, name, filename){
+      let uri = 'data:application/vnd.ms-excel;base64,',
+      template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><title></title><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--><meta http-equiv="content-type" content="text/plain; charset=UTF-8"/></head><body><table>{table}</table></body></html>',
+      base64 = function(s) { return window.btoa(decodeURIComponent(encodeURIComponent(s))) },         format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; })}
+
+      if (!table.nodeType) table = document.getElementById(table)
+      var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
+
+      var link = document.createElement('a');
+      link.download = filename;
+      link.href = uri + base64(format(template, ctx));
+      link.click();
     }
   },
   mounted() {
