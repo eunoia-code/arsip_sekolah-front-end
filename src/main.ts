@@ -18,7 +18,7 @@ import moment from 'moment';
 import VueHtmlToPaper from 'vue-html-to-paper';
 
 import axios from 'axios';
-import VueAxios from 'vue-axios';
+// import VueAxios from 'vue-axios';
 // import AxiosPlugin from 'vue-axios-cors';
 import api from "./plugins/axios";
 
@@ -74,17 +74,6 @@ router.beforeEach((to, from, next) => {
 
 const levelStat = localStorage.getItem('level');
 console.log(levelStat);
-
-
-// router.afterEach((to, from) => {
-//     // Use next tick to handle router history correctly
-//     // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
-//     Vue.nextTick(() => {
-//       console.log(to);
-//
-//         // document.title = to.meta.title || "DPUTR KONKEP | ";
-//     });
-// });
 
 new Vue({
   router,
