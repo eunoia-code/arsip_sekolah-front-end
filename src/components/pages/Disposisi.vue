@@ -14,7 +14,7 @@
       </div>
     </div>
     <v-card-title>
-      Data Referensi
+      Data Disposisi
       <v-spacer></v-spacer>
       <button @click="toggleAddModal" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
         <i class="fa fa-plus"></i> Tambah Data
@@ -47,17 +47,24 @@
         <template v-slot:item="row">
           <tr>
             <td>{{row.item.num}}</td>
-            <td>{{row.item.kode}}</td>
-            <td>{{row.item.nama}}</td>
-            <td>{{row.item.uraian}}</td>
+            <td>{{row.item.nomor_surat}}</td>
+            <td>{{row.item.asal_surat}}</td>
+            <td>{{row.item.isi_surat}}</td>
+            <td>{{row.item.tanggal_surat}}</td>
             <td style="width:auto">
               <div class="flex justify-center">
-                <button class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataReferensi(row.item)" title="Edit Data">
+                <a :href="'http://localhost:8080/uploads/surat_masuk/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
+                    <i class="fas fa-file-pdf"></i>
+                </a>
+                <!-- <button class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratMasuk(row.item)" title="Edit Data">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataReferensi(row.item.id_referensi)" title="Hapus Data">
+                <button class="text-black bg-green-500 border border-solid border-green-600 font-bold hover:bg-green-400 active:bg-green-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDisposisiDataSuratMasuk(row.item.id_surat_masuk)" title="Disposisi Surat">
+                    <i class="fas fa-share"></i>
+                </button> -->
+                <!-- <button class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataDisposisi(row.item.id_disposisi)" title="Hapus Data">
                   <i class="fas fa-trash-alt"></i>
-                </button>
+                </button> -->
               </div>
             </td>
           </tr>
@@ -66,11 +73,9 @@
     </div>
 
     <!-- ADD MODAL -->
-    <div v-if="addModal" class="overflow-x-hidden overflow-y-auto fixed md:mx-6 sm:px-6 inset-0 z-50 outline-none focus:outline-none justify-center items-center flex rounded">
+    <!-- <div v-if="addModal" class="overflow-x-hidden overflow-y-auto fixed md:mx-6 sm:px-6 inset-0 z-50 outline-none focus:outline-none justify-center items-center flex rounded">
       <div class="relative w-3/4 my-6 mx-auto max-w-6xl mx-6">
-        <!--content-->
         <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-          <!--header-->
           <div class="flex items-start bg-blue-500 justify-between p-2 border-b border-solid border-gray-300 rounded-t">
             <h3 class="text-3xl font-semibold">
               Tambah Data Referensi
@@ -81,7 +86,6 @@
               </span>
             </button>
           </div>
-          <!--body-->
           <form @submit.prevent="addDataReferensi" id="addReferensiForm">
             <div class="relative p-6 flex-auto">
               <div class="flex flex-wrap -mx-3 mb-6">
@@ -90,7 +94,6 @@
                     Kode
                   </label>
                   <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="kode" type="text" placeholder="Kode" v-model="addData.kode" required>
-                  <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
                 <div class="w-full md:w-1/2 px-3">
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="nama">
@@ -108,7 +111,6 @@
                 </div>
               </div>
             </div>
-            <!--footer-->
             <div class="flex items-center bg-blue-500 justify-end p-2 border-t border-solid border-gray-300 rounded-b">
               <button class="text-black bg-gray-200 border border-solid border-gray-500 hover:bg-gray-200 hover:bg-gray-400 active:bg-gray-500 font-bold uppercase text-sm px-6 py-2 rounded outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="toggleAddModal">
                 Close
@@ -121,15 +123,13 @@
         </div>
       </div>
     </div>
-    <div v-if="addModal" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+    <div v-if="addModal" class="opacity-25 fixed inset-0 z-40 bg-black"></div> -->
 
 
     <!-- EDIT MODAL -->
-    <div v-if="editModal" class="overflow-x-hidden overflow-y-auto fixed md:mx-6 sm:px-6 inset-0 z-50 outline-none focus:outline-none justify-center items-center flex rounded">
+    <!-- <div v-if="editModal" class="overflow-x-hidden overflow-y-auto fixed md:mx-6 sm:px-6 inset-0 z-50 outline-none focus:outline-none justify-center items-center flex rounded">
       <div class="relative w-3/4 my-6 mx-auto max-w-6xl mx-6">
-        <!--content-->
         <div class="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-          <!--header-->
           <div class="flex items-start bg-yellow-500 justify-between p-2 border-b border-solid border-yellow-300 rounded-t">
             <h3 class="text-3xl font-semibold">
               Edit Data Referensi
@@ -140,7 +140,6 @@
               </span>
             </button>
           </div>
-          <!--body-->
           <form @submit.prevent="editDataReferensi" id="editReferensiForm">
             <div class="relative p-6 flex-auto">
               <div class="flex flex-wrap -mx-3 mb-6">
@@ -150,7 +149,6 @@
                     Kode
                   </label>
                   <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="ekode" type="text" placeholder="Kode" v-model="editData.kode" required>
-                  <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
                 <div class="w-full md:w-1/2 px-3">
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="enama">
@@ -168,7 +166,6 @@
                 </div>
               </div>
             </div>
-            <!--footer-->
             <div class="flex items-center bg-yellow-500 justify-end p-2 border-t border-solid border-gray-300 rounded-b">
               <button class="text-black bg-gray-200 border border-solid border-gray-500 hover:bg-gray-200 hover:bg-gray-400 active:bg-gray-500 font-bold uppercase text-sm px-6 py-2 rounded outline-none focus:outline-none mr-1 mb-1" type="button" style="transition: all .15s ease" @click="toggleEditModal">
                 Close
@@ -181,15 +178,12 @@
         </div>
       </div>
     </div>
-    <div v-if="editModal" class="opacity-25 fixed inset-0 z-40 bg-black"></div>
+    <div v-if="editModal" class="opacity-25 fixed inset-0 z-40 bg-black"></div> -->
 
   </v-card>
 </template>
 
 <script>
-import axios from 'axios';
-const api_url = 'http://localhost:8080/api/';
-
 export default {
   components: {
   },
@@ -204,17 +198,23 @@ export default {
       search: '',
       headers: [
         { text: 'No.', value: 'num' },
-        { text: 'Kode', value: 'kode' },
-        { text: 'Nama', value: 'nama' },
-        { text: 'Uraian', value: 'uraian' },
-        { text: 'Pilihan' },
+        { text: 'Nomor Surat', value: 'nomor_surat' },
+        { text: 'Asal Surat', value: 'asal_surat' },
+        {
+          text: 'Isi Surat',
+          align: 'start',
+          sortable: false,
+          value: 'isi_surat',
+        },
+        { text: 'Tanggal Surat', value: 'tanggal_surat' },
+        { text: 'Pilihan' }
       ],
-      referensi_data: []
+      disposisi_data: []
     }
   },
   computed: {
     items() {
-      return this.referensi_data.map((d, index) => ({
+      return this.disposisi_data.map((d, index) => ({
         ...d,
         num: index + 1
       }))
@@ -222,68 +222,67 @@ export default {
   },
   methods: {
     getData: function(){
-      const options = {
-        url: `${api_url}referensi`,
-        method: 'GET'
-      }
+      const id = localStorage.getItem('id');
 
-      this.$axios(options)
-        .then(response => (this.referensi_data = response.data['data']))
+      this.$api.get('disposisi/'+id)
+        .then(response => {
+          this.disposisi_data = response['data'].data
+        })
         .catch(error => console.log(error));
     },
     toggleAddModal: function(){
       this.addModal = !this.addModal
     },
-    addDataReferensi: function(e){
-      this.$axios
-        .post(`${api_url}referensi/`, {
-            kode: `${this.addData.kode}`,
-            nama: `${this.addData.nama}`,
-            uraian: `${this.addData.uraian}`
-          }, {
-          headers: {
-            'Content-type': 'application/x-www-form-urlencoded',
-          },
-         })
-        .then((data) => {
-          this.getData();
-          this.toggleAddModal();
-          this.successMessage('ditambahkan');
-        }).catch(err => {
-          console.error(err);
-        });
-
-      e.preventDefault();
-    },
-    toggleEditModal: function(){
-      this.editModal = !this.editModal
-    },
-    selectDataReferensi: function(row){
+    // addDataReferensi: function(e){
+    //   this.$axios
+    //     .post(`${api_url}referensi/`, {
+    //         kode: `${this.addData.kode}`,
+    //         nama: `${this.addData.nama}`,
+    //         uraian: `${this.addData.uraian}`
+    //       }, {
+    //       headers: {
+    //         'Content-type': 'application/x-www-form-urlencoded',
+    //       },
+    //      })
+    //     .then((data) => {
+    //       this.getData();
+    //       this.toggleAddModal();
+    //       this.successMessage('ditambahkan');
+    //     }).catch(err => {
+    //       console.error(err);
+    //     });
+    //
+    //   e.preventDefault();
+    // },
+    // toggleEditModal: function(){
+    //   this.editModal = !this.editModal
+    // },
+    selectDataDisposisi: function(row){
       this.toggleEditModal()
 
       this.editData = {
-        id_referensi: `${row.id_referensi}`,
+        id_referensi: `${row.id_disposisi}`,
         kode: `${row.kode}`,
         nama: `${row.nama}`,
         uraian: `${row.uraian}`
       }
     },
-    editDataReferensi: function(){
-      this.$axios
-        .put(`${api_url}referensi/${this.editData.id_referensi}`, this.editData)
-        .then(data => {
-          this.getData();
-          this.toggleEditModal();
-          this.successMessage('diupdate');
-        }).catch(err => {
-          console.error(err);
-        });
-    },
-    deleteDataReferensi: function(id){
+    // editDataReferensi: function(){
+    //   this.$axios
+    //     .put(`${api_url}referensi/${this.editData.id_referensi}`, this.editData)
+    //     .then(data => {
+    //       this.getData();
+    //       this.toggleEditModal();
+    //       this.successMessage('diupdate');
+    //     }).catch(err => {
+    //       console.error(err);
+    //     });
+    // },
+    deleteDataDisposisi: function(id){
       this.$confirm("Apakah Kamu yakin ingin menghapus data ini?").then(conf => {
         if(conf){
-          this.$axios
-            .delete(`${api_url}referensi/${id}`)
+          this.$api
+            .delete('diposisi/'+id)
             .then(data => {
               this.getData();
               this.successMessage('dihapus');

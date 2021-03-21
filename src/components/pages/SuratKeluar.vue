@@ -16,10 +16,10 @@
     <v-card-title>
       Data Surat Keluar
       <v-spacer></v-spacer>
-      <button @click="toggleAddModal" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
+      <button @click="toggleAddModal" :class="levelStat!==2? 'hidden' : ''" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
         <i class="fa fa-plus"></i> Tambah Data
       </button> &nbsp;
-      <button @click="exportExcel('myTable', 'Tabel Surat Keluar', 'surat keluar.xls')" class="bg-green-700 hover:bg-blue-900 text-white px-2 rounded">
+      <button @click="exportExcel('myTable', 'Tabel Surat Keluar', 'surat keluar.xls')" :class="levelStat!==2? 'hidden' : ''" class="bg-green-700 hover:bg-blue-900 text-white px-2 rounded">
         <i class="fas fa-file-excel"></i> Export Data
       </button>
     </v-card-title>
@@ -50,26 +50,26 @@
       >
         <template v-slot:item="row">
           <tr>
-            <td>{{row.item.num}}</td>
-            <td>{{row.item.nomor_surat}}</td>
-            <td>{{row.item.tujuan}}</td>
-            <td>{{row.item.perihal}}</td>
-            <td>{{row.item.tempat}}</td>
-            <td>{{row.item.waktu}}</td>
+            <td class="align-top">{{row.item.num}}</td>
+            <td class="align-top">{{row.item.nomor_surat}}</td>
+            <td class="align-top">{{row.item.tujuan}}</td>
+            <td class="align-top">{{row.item.perihal}}</td>
+            <td class="align-top">{{row.item.tempat}}</td>
+            <td class="align-top">{{row.item.waktu}}</td>
             <td>{{row.item.isi_surat}}</td>
-            <td>{{row.item.tanggal_surat | format_tanggal}}</td>
-            <td style="width:auto">
+            <td class="align-top">{{row.item.tanggal_surat | format_tanggal}}</td>
+            <td class="align-top" style="width:auto">
               <div class="flex justify-center">
                 <a :href="'http://localhost:8080/uploads/surat_keluar/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
                     <i class="fas fa-file-pdf"></i>
                 </a>
-                <button class="text-black bg-teal-500 border border-solid border-teal-600 font-bold hover:bg-teal-400 active:bg-teal-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="showDataSuratKeluar(row.item)" title="Lihat Data">
+                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-teal-500 border border-solid border-teal-600 font-bold hover:bg-teal-400 active:bg-teal-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="showDataSuratKeluar(row.item)" title="Lihat Data">
                     <i class="fas fa-eye"></i>
                 </button>
-                <button class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratKeluar(row.item)" title="Edit Data">
+                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratKeluar(row.item)" title="Edit Data">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataSuratKeluar(row.item.id_surat_keluar)" title="Hapus Data">
+                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataSuratKeluar(row.item.id_surat_keluar)" title="Hapus Data">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
@@ -129,7 +129,7 @@
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="nomor_surat">
                     Nomor Surat
                   </label>
-                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="nomor_surat" type="text" placeholder="Nomor Surat" v-model="nomor_surat" disabled required>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="nomor_surat" type="text" placeholder="Nomor Surat" v-model="addData.nomor_surat" required>
                   <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
                 <div class="w-full md:w-1/2 px-3">
@@ -350,18 +350,13 @@
               </tr>
               <tr>
                 <td style="width:100px">
-                  <img src="../../assets/a.png">
+                  <img src="../../assets/dputr.png">
                 </td>
-                <td style="text-align:center" colspan="4">
-                  <h4>PEMERINTAH KABUPATEN KOLAKA TIMUR</h4>
-                  <h4>DINAS PENDIDIKAN KEPEMUDAAN DAN OLAHRAGA</h4>
-                  <h4><b>SMP NEGERI SATU ATAP 1 AERE</b></h4>
-                  <h4><b>NPSN: 40404649</b></h4>
-                  <small> <i>Alamat: Desa Iwoimenggura Kec. Aere Kab. Kolaka Timur</i> </small><br>
-                  <small> <i>email: smpnsatap1 aere@gmail.com</i> </small>
-                </td>
-                <td style="width:100px">
-                  <img src="../../assets/b.png">
+                <td style="text-align:center" colspan="5">
+                  <h4> <b>PEMERINTAH KABUPATEN KONAWE KEPULAUAN</b> </h4>
+                  <h4> <b>DINAS PEKERJAAN UMUM DAN TATA RUANG</b> </h4>
+                  <small> <i>Alamat : Jl. Poros Langara-Lampeapi Km. 3</i> </small><br>
+                  <small> <i>L  A  N  G  A  R  A</i> </small>
                 </td>
               </tr>
               <tr>
@@ -371,7 +366,7 @@
               </tr>
               <tr>
                 <td colspan="6" style="text-align:right">
-                  Aere, {{editData.tanggal_surat | tanggal_dan_nama_bulan}}
+                  Langara, {{editData.tanggal_surat | tanggal_dan_nama_bulan}}
                 </td>
               </tr>
               <tr>
@@ -469,18 +464,19 @@
               <tr>
                 <td colspan="4"></td>
                 <td colspan="2" style="">
-                  Kepala Sekolah
+                  Kepala Dinas Pekerjaan Umum dan <br> Tata Ruang Kabupaten Konawe Kepulauan
                 </td>
               </tr>
               <tr>
                 <td colspan="4"></td>
-                <td style="height:150px;vertical-align:bottom;" colspan="2">
-                  <b>LA SAMADE, S.Pd</b>
+                <td style="height:150px;vertical-align:bottom;text-align:center;" colspan="2">
+                  <u><b>ISRAWAN SULPA, ST.,Dipl.WRD.</b></u>
                 </td>
               </tr>
               <tr>
                 <td colspan="4"></td>
-                <td style="" colspan="2">
+                <td style="text-align:center;" colspan="2">
+                  Pembina Tk. I, IV/b<br>
                   NIP. 19661231 199002 1 015
                 </td>
               </tr>
@@ -518,6 +514,7 @@ export default {
       editModal: false,
       showModal: false,
       disposisiModal: false,
+      levelStat: localStorage.getItem('level'),
       addData: {},
       editData: {},
       disposisiData: {},
@@ -606,13 +603,14 @@ export default {
       if(this.add_filename!=='')
         formData.append("file_dokumen", this.add_filename);
 
-      formData.append("nomor_surat", this.nomor_surat);
+      formData.append("nomor_surat", this.addData.nomor_surat);
       formData.append("tujuan", this.addData.tujuan);
       formData.append("perihal", this.addData.perihal);
       formData.append("waktu", this.addData.waktu);
       formData.append("tempat", this.addData.tempat);
       formData.append("isi_surat", this.addData.isi_surat);
       formData.append("tanggal_surat", this.addData.tanggal_surat);
+      formData.append("id_user", localStorage.getItem('id'));
 
       this.$api
         .post('surat_keluar/', formData).then((data) => {
@@ -683,6 +681,7 @@ export default {
       formData.append("isi_surat", this.editData.isi_surat);
       formData.append("tanggal_surat", this.editData.tanggal_surat);
       formData.append("file_lama", this.editData.file);
+      formData.append("id_user", localStorage.getItem('id'));
 
       this.$api
         .post(`/surat_keluar/update/${this.editData.id_surat_keluar}`, formData)

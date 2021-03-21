@@ -20,7 +20,7 @@ export default {
     Nav,
     Breadcrumbs,
     Footer
-  },
+  }
 };
 </script>
 

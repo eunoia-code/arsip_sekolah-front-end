@@ -1,5 +1,5 @@
 <template>
-  <nav class="text-black font-bold my-4 bg-teal-300 rounded p-3" aria-label="Breadcrumb">
+  <nav class="text-black font-bold my-4 bg-yellow-300 rounded p-3" aria-label="Breadcrumb">
     <ol class="list-none p-0 inline-flex">
       <li class="flex items-center">
         <router-link to="/">Beranda</router-link>

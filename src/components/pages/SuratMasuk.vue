@@ -16,10 +16,10 @@
     <v-card-title>
       Data Surat Masuk
       <v-spacer></v-spacer>
-      <button @click="toggleAddModal" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
+      <button @click="toggleAddModal" :class="levelStat!==2? 'hidden' : ''" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
         <i class="fa fa-plus"></i> Tambah Data
       </button> &nbsp;
-      <button @click="exportExcel('myTable', 'Tabel Surat Keluar', 'surat keluar.xls')" class="bg-green-700 hover:bg-blue-900 text-white px-2 rounded">
+      <button @click="exportExcel('myTable', 'Tabel Surat Keluar', 'surat keluar.xls')" :class="levelStat!==2? 'hidden' : ''" class="bg-green-700 hover:bg-blue-900 text-white px-2 rounded">
         <i class="fas fa-file-excel"></i> Export Data
       </button>
     </v-card-title>
@@ -49,23 +49,23 @@
       >
         <template v-slot:item="row">
           <tr>
-            <td>{{row.item.num}}</td>
-            <td>{{row.item.nomor_surat}}</td>
-            <td>{{row.item.asal_surat}}</td>
+            <td class="align-top">{{row.item.num}}</td>
+            <td class="align-top">{{row.item.nomor_surat}}</td>
+            <td class="align-top">{{row.item.asal_surat}}</td>
             <td>{{row.item.isi_surat}}</td>
-            <td>{{row.item.tanggal_surat}}</td>
-            <td style="width:auto">
+            <td class="align-top">{{row.item.tanggal_surat}}</td>
+            <td class="align-top" style="width:auto">
               <div class="flex justify-center">
                 <a :href="'http://localhost:8080/uploads/surat_masuk/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
                     <i class="fas fa-file-pdf"></i>
                 </a>
-                <button class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratMasuk(row.item)" title="Edit Data">
+                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratMasuk(row.item)" title="Edit Data">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button class="text-black bg-green-500 border border-solid border-green-600 font-bold hover:bg-green-400 active:bg-green-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDisposisiDataSuratMasuk(row.item.id_surat_masuk)" title="Disposisi Surat">
+                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-green-500 border border-solid border-green-600 font-bold hover:bg-green-400 active:bg-green-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDisposisiDataSuratMasuk(row.item.id_surat_masuk)" title="Disposisi Surat">
                     <i class="fas fa-share"></i>
                 </button>
-                <button class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataSuratMasuk(row.item.id_surat_masuk)" title="Hapus Data">
+                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataSuratMasuk(row.item.id_surat_masuk)" title="Hapus Data">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
@@ -120,7 +120,7 @@
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="nomor_surat">
                     Nomor Surat
                   </label>
-                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="nomor_surat" type="text" placeholder="Nomor Surat" v-model="nomor_surat" disabled required>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="nomor_surat" type="text" placeholder="Nomor Surat" v-model="addData.nomor_surat" required>
                   <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
                 <div class="w-full md:w-1/2 px-3">
@@ -208,7 +208,7 @@
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="enomor_surat">
                     Nomor Surat
                   </label>
-                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="enomor_surat" type="text" placeholder="Nomor Surat" v-model="editData.nomor_surat" required disabled>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="enomor_surat" type="text" placeholder="Nomor Surat" v-model="editData.nomor_surat" required>
                   <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
                 <div class="w-full md:w-1/2 px-3">
@@ -294,7 +294,15 @@
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="disposisi_tujuan">
                     Tujuan Disposisi
                   </label>
-                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="disposisi_tujuan" type="text" placeholder="Tujuan" v-model="disposisiData.tujuan" required>
+                  <div class="relative">
+                    <select class="block appearance-none w-full bg-gray-200 border border-red-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 focus:shadow-outline hover:shadow-outline" v-model="disposisiData.tujuan" id="grid-state2">
+                      <option selected disabled>-- Pilih Tujuan --</option>
+                      <option v-for="user in userList" :value="user.id_user">{{user.name}}</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                  </div>
                   <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -320,7 +328,7 @@
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="disposisi_isi_surat">
                     Isi Disposisi
                   </label>
-                  <textarea class="resize-y appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="disposisi_isi_surat" v-model="disposisiData.isi" required></textarea>
+                  <textarea class="resize-y appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline focus:border-gray-500" id="disposisi_isi_surat" v-model="disposisiData.isi_disposisi" required></textarea>
                   <p class="text-gray-600 text-xs italic">Isi Disposisi</p>
                 </div>
                 <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -377,6 +385,7 @@ export default {
       addModal: false,
       editModal: false,
       disposisiModal: false,
+      levelStat: localStorage.getItem('level'),
       addData: {},
       editData: {},
       klasifikasi: {},
@@ -389,6 +398,7 @@ export default {
       search: '',
       add_filename: '',
       edit_filename: '',
+      userList: {},
       headers: [
         { text: 'No.', value: 'num' },
         { text: 'Nomor Surat', value: 'nomor_surat' },
@@ -465,9 +475,10 @@ export default {
         formData.append("file_dokumen", this.add_filename);
 
       formData.append("isi_surat", this.addData.isi_surat);
-      formData.append("nomor_surat", this.nomor_surat);
+      formData.append("nomor_surat", this.addData.nomor_surat);
       formData.append("asal_surat", this.addData.asal_surat);
       formData.append("tanggal_surat", this.addData.tanggal_surat);
+      formData.append("id_user", localStorage.getItem('id'));
 
       this.$api
         .post('surat_masuk/', formData).then((data) => {
@@ -515,6 +526,7 @@ export default {
       formData.append("nomor_surat", this.editData.nomor_surat);
       formData.append("asal_surat", this.editData.asal_surat);
       formData.append("tanggal_surat", this.editData.tanggal_surat);
+      formData.append("id_user", localStorage.getItem('id'));
 
       // for (var pair of formData.entries()) {
       //   console.log(pair[0]+ ', ' + pair[1]);
@@ -549,18 +561,30 @@ export default {
         }
       });
     },
+    getUserList: function(id){
+      this.$api
+        .post('getUserList/'+id)
+        .then(result => {
+          this.userList = result['data'].status
+        }).catch(err => {
+          console.log(err);
+        })
+    },
     selectDisposisiDataSuratMasuk: function(id){
       this.disposisiData.id_surat_masuk = id
+      this.getUserList(localStorage.getItem('id'))
       this.toggleDisposisiModal()
     },
     disposisiDataSuratMasuk: function(){
       this.$api
-        .post(`${api_url}disposisi/`, {
+        .post(`disposisi/`, {
             tujuan: `${this.disposisiData.tujuan}`,
             isi_disposisi: `${this.disposisiData.isi_disposisi}`,
+            catatan: `${this.disposisiData.catatan}`,
             sifat: `${this.disposisiData.sifat}`,
             id_surat_masuk: `${this.disposisiData.id_surat_masuk}`,
-            batas_waktu: `${this.disposisiData.batas_waktu}`
+            batas_waktu: `${this.disposisiData.batas_waktu}`,
+            id_user: localStorage.getItem('id')
           }, {
           headers: {
             'Content-type': 'application/x-www-form-urlencoded',

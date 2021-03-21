@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
-import store from './store';
+// import store from './store';
 
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
@@ -21,6 +21,7 @@ import axios from 'axios';
 import VueAxios from 'vue-axios';
 // import AxiosPlugin from 'vue-axios-cors';
 import { api } from "./plugins/axios";
+import { store } from "./store/store";
 
 let vuePlugins = [
   Vuetify, VueTailwindPicker, VueSimpleAlert
@@ -62,6 +63,29 @@ Vue.filter('nama_hari', (value:any) => {
     return moment(String(value)).locale('id').format('dddd')
   }
 })
+
+const auth = localStorage.getItem('loginState')
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'login' && !auth) next({ name: 'login' })
+  // if the user is not authenticated, `next` is called twice
+  document.title = to.meta.title || "DPUTR KONKEP";
+  next()
+})
+
+const levelStat = localStorage.getItem('level');
+console.log(levelStat);
+
+
+// router.afterEach((to, from) => {
+//     // Use next tick to handle router history correctly
+//     // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
+//     Vue.nextTick(() => {
+//       console.log(to);
+//
+//         // document.title = to.meta.title || "DPUTR KONKEP | ";
+//     });
+// });
 
 new Vue({
   router,

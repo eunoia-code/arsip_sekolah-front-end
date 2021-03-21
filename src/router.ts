@@ -34,9 +34,9 @@ export default new Router({
           component: () => import(/* webpackChunkName: "about" */ './views/pages/BukuAgenda.vue'),
         },
         {
-          path: '/referensi',
-          name: 'referensi',
-          component: () => import(/* webpackChunkName: "about" */ './views/pages/Referensi.vue'),
+          path: '/disposisi',
+          name: 'disposisi',
+          component: () => import(/* webpackChunkName: "about" */ './views/pages/Disposisi.vue'),
         },
         {
           path: '/dokumen',

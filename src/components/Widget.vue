@@ -45,7 +45,7 @@ export default {
         method: 'GET'
       }
 
-      this.$axios(options)
+      this.$api(options)
         .then(response => (this.surat_masuk = response.data['data']))
         .catch(error => console.log(error));
 
@@ -54,7 +54,7 @@ export default {
         method: 'GET'
       }
 
-      this.$axios(options)
+      this.$api(options)
         .then(response => (this.surat_keluar = response.data['data']))
         .catch(error => console.log(error));
 
@@ -63,7 +63,7 @@ export default {
         method: 'GET'
       }
 
-      this.$axios(options)
+      this.$api(options)
         .then(response => (this.disposisi = response.data['data']))
         .catch(error => console.log(error));
 
@@ -72,7 +72,7 @@ export default {
         method: 'GET'
       }
 
-      this.$axios(options)
+      this.$api(options)
         .then(response => (this.referensi = response.data['data']))
         .catch(error => console.log(error));
     },

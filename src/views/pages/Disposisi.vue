@@ -1,10 +1,10 @@
 <template>
-  <div class="referensi">
-    <Breadcrumbs page="Referensi" show="Data" />
+  <div class="disposisi">
+    <Breadcrumbs page="Disposisi" show="Data" />
     <div class="flex mb-4">
       <div class="w-full h-12 p-3">
         <div class="w-full bg-gray-500 h-12">
-          <Referensi />
+          <Disposisi />
         </div>
       </div>
     </div>
@@ -15,13 +15,13 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Main from '@/components/Main.vue';
 import Breadcrumbs from '@/components/Breadcrumbs.vue';
-import Referensi from '@/components/pages/Referensi.vue';
+import Disposisi from '@/components/pages/Disposisi.vue';
 
 @Component({
   components: {
     Main,
     Breadcrumbs,
-    Referensi
+    Disposisi
   },
 })
 export default class Home extends Vue {}
