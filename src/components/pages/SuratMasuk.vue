@@ -16,10 +16,10 @@
     <v-card-title>
       Data Surat Masuk
       <v-spacer></v-spacer>
-      <button @click="toggleAddModal" :class="levelStat!==2? 'hidden' : ''" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
+      <button @click="toggleAddModal" :class="levelStat==2? 'hidden' : ''" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
         <i class="fa fa-plus"></i> Tambah Data
       </button> &nbsp;
-      <button @click="exportExcel('myTable', 'Tabel Surat Keluar', 'surat keluar.xls')" :class="levelStat!==2? 'hidden' : ''" class="bg-green-700 hover:bg-blue-900 text-white px-2 rounded">
+      <button @click="exportExcel('myTable', 'Tabel Surat Keluar', 'surat keluar.xls')" :class="levelStat==2? 'hidden' : ''" class="bg-green-700 hover:bg-blue-900 text-white px-2 rounded">
         <i class="fas fa-file-excel"></i> Export Data
       </button>
     </v-card-title>
@@ -59,13 +59,13 @@
                 <a :href="'http://localhost:8080/uploads/surat_masuk/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
                     <i class="fas fa-file-pdf"></i>
                 </a>
-                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratMasuk(row.item)" title="Edit Data">
+                <button :class="levelStat==2? 'hidden' : ''" class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratMasuk(row.item)" title="Edit Data">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-green-500 border border-solid border-green-600 font-bold hover:bg-green-400 active:bg-green-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDisposisiDataSuratMasuk(row.item.id_surat_masuk)" title="Disposisi Surat">
+                <button :class="levelStat==2? 'hidden' : ''" class="text-black bg-green-500 border border-solid border-green-600 font-bold hover:bg-green-400 active:bg-green-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDisposisiDataSuratMasuk(row.item.id_surat_masuk)" title="Disposisi Surat">
                     <i class="fas fa-share"></i>
                 </button>
-                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataSuratMasuk(row.item.id_surat_masuk)" title="Hapus Data">
+                <button :class="levelStat==2? 'hidden' : ''" class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataSuratMasuk(row.item.id_surat_masuk)" title="Hapus Data">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>

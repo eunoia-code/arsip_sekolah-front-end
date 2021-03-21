@@ -45,6 +45,8 @@ Vue.use(VueHtmlToPaper, options)
 
 Vue.config.productionTip = false;
 
+Vue.prototype.$api = api;
+
 Vue.filter('format_tanggal', (value:any) => {
   if(value){
     return moment(String(value)).format('DD-MM-YYYY')
@@ -78,7 +80,7 @@ console.log(levelStat);
 new Vue({
   router,
   store,
-  api,
+  // api,
   vuetify: new Vuetify(),
   render: (h) => h(App),
 }).$mount('#app');

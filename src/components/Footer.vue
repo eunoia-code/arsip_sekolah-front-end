@@ -23,7 +23,9 @@
 </template>
 
 <script>
-export default footer;
+export default {
+  name: 'footer'
+};
 </script>
 
 <style lang="css" scoped>
