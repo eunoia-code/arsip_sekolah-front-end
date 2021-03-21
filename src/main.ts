@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
-// import store from './store';
+import store from './store';
 
 import Vuetify from "vuetify";
 import "vuetify/dist/vuetify.min.css";
@@ -20,8 +20,7 @@ import VueHtmlToPaper from 'vue-html-to-paper';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 // import AxiosPlugin from 'vue-axios-cors';
-import { api } from "./plugins/axios";
-import { store } from "./store/store";
+import api from "./plugins/axios";
 
 let vuePlugins = [
   Vuetify, VueTailwindPicker, VueSimpleAlert
