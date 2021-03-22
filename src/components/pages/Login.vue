@@ -40,6 +40,8 @@
 </template>
 
 <script>
+import router from '@/router'
+
 export default {
   data(){
     return {
@@ -66,8 +68,8 @@ export default {
             localStorage.setItem("id", response.data['resp'][0].id_user);
 
             // window.location = `http://localhost:8081/`;
-            window.location = `https://dputr-konkep.vercel.app/`
-            // this.$router.push('/')
+            // window.location = `https://dputr-konkep.vercel.app/`
+            router.push('/')
           } else {
             alert("User does not exist");
           }
