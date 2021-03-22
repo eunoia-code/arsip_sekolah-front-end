@@ -40,11 +40,6 @@
 </template>
 
 <script>
-// const api_url = 'http://localhost:8080/api/';
-import Vue from 'vue'
-import VueRouter from 'vue-router';
-Vue.use(VueRouter);
-
 export default {
   data(){
     return {
@@ -70,7 +65,9 @@ export default {
             localStorage.setItem("name", response.data['resp'][0].name);
             localStorage.setItem("id", response.data['resp'][0].id_user);
 
-            window.location = `http://localhost:8081/`;
+            // window.location = `http://localhost:8081/`;
+            window.location = `https://dputr-konkep.vercel.app/`
+            // this.$router.push('/')
           } else {
             alert("User does not exist");
           }
