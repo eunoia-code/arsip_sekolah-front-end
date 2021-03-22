@@ -31,7 +31,7 @@
         <!-- <router-link to="/buku_agenda" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-yellow-200 mr-4">
           <b>Buku Agenda</b>
         </router-link> -->
-        <router-link to="/disposisi" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-yellow-200 mr-4">
+        <router-link to="/disposisi" v-if="levelStat===1" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-yellow-200 mr-4">
           <b>Disposisi</b>
         </router-link>
         <a href="javascript:void(0)" @click="logout()" class="block mt-4 lg:inline-block lg:mt-0 text-white hover:text-yellow-200 mr-4">
@@ -58,6 +58,7 @@ export default {
   data: function() {
     return {
       open: false,
+      levelStat: parseInt(localStorage.getItem('level')),
     }
   },
   methods: {

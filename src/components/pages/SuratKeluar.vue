@@ -16,10 +16,10 @@
     <v-card-title>
       Data Surat Keluar
       <v-spacer></v-spacer>
-      <button @click="toggleAddModal" :class="levelStat!==2? 'hidden' : ''" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
+      <button @click="toggleAddModal" v-if="levelStat===1" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
         <i class="fa fa-plus"></i> Tambah Data
       </button> &nbsp;
-      <button @click="exportExcel('myTable', 'Tabel Surat Keluar', 'surat keluar.xls')" :class="levelStat!==2? 'hidden' : ''" class="bg-green-700 hover:bg-blue-900 text-white px-2 rounded">
+      <button @click="exportExcel('myTable', 'Tabel Surat Keluar', 'surat keluar.xls')" v-if="levelStat===1" class="bg-green-700 hover:bg-blue-900 text-white px-2 rounded">
         <i class="fas fa-file-excel"></i> Export Data
       </button>
     </v-card-title>
@@ -63,13 +63,13 @@
                 <a :href="'http://localhost:8080/uploads/surat_keluar/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
                     <i class="fas fa-file-pdf"></i>
                 </a>
-                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-teal-500 border border-solid border-teal-600 font-bold hover:bg-teal-400 active:bg-teal-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="showDataSuratKeluar(row.item)" title="Lihat Data">
+                <button v-if="levelStat===1" class="text-black bg-teal-500 border border-solid border-teal-600 font-bold hover:bg-teal-400 active:bg-teal-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="showDataSuratKeluar(row.item)" title="Lihat Data">
                     <i class="fas fa-eye"></i>
                 </button>
-                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratKeluar(row.item)" title="Edit Data">
+                <button v-if="levelStat===1" class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratKeluar(row.item)" title="Edit Data">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
-                <button :class="levelStat!==2? 'hidden' : ''" class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataSuratKeluar(row.item.id_surat_keluar)" title="Hapus Data">
+                <button v-if="levelStat===1" class="text-black bg-red-500 border border-solid border-red-600 font-bold hover:bg-red-400 active:bg-red-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="deleteDataSuratKeluar(row.item.id_surat_keluar)" title="Hapus Data">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
@@ -513,7 +513,7 @@ export default {
       editModal: false,
       showModal: false,
       disposisiModal: false,
-      levelStat: localStorage.getItem('level'),
+      levelStat: parseInt(localStorage.getItem('level')),
       addData: {},
       editData: {},
       disposisiData: {},
@@ -555,22 +555,12 @@ export default {
   },
   methods: {
     getData: function(){
-      const options = {
-        url: `${api_url}surat_keluar`,
-        method: 'GET'
-      }
-
-      this.$api(options)
+        this.$api.get('surat_keluar')
         .then(response => (this.surat_keluar_data = response.data['data']))
         .catch(error => console.log(error));
     },
     getNomorSurat: function(){
-      const options = {
-        url: `${api_url}nomor/428`,
-        method: 'GET'
-      }
-
-      this.$api(options)
+      this.$api.get('nomor/428')
         .then(response => {
           this.nomor_agenda = Number(response.data['data'].nomor_agenda) + 1;
           this.nomor_surat = '428/' + (this.nomor_agenda<10 ? '0'+this.nomor_agenda : this.nomor_agenda) +'/2021'
@@ -579,7 +569,7 @@ export default {
     },
     editNomorSurat: function(){
       this.$api
-        .put(`${api_url}nomor/428`, {nomor_agenda: this.nomor_agenda})
+        .put(`nomor/428`, {nomor_agenda: this.nomor_agenda})
         .then(data => {
           this.getData();
         }).catch(err => {
@@ -702,7 +692,7 @@ export default {
       this.$confirm("Apakah Kamu yakin ingin menghapus data ini?").then(conf => {
         if(conf){
           this.$api
-            .delete(`${api_url}surat_keluar/${id}`)
+            .delete(`surat_keluar/${id}`)
             .then(data => {
               console.log(data);
               this.getData();
