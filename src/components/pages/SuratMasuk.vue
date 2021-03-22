@@ -371,10 +371,7 @@
 </template>
 
 <script>
-import axios from 'axios';
 import VueTailwindPicker from 'vue-tailwind-picker';
-const api_url = 'http://localhost:8080/api/';
-const FormData = require('form-data');
 
 export default {
   components: {

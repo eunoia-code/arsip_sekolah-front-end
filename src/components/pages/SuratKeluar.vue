@@ -502,7 +502,6 @@
 
 <script>
 import VueTailwindPicker from 'vue-tailwind-picker';
-const api_url = 'http://localhost:8080/api/';
 
 export default {
   components: {
