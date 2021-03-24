@@ -13,7 +13,7 @@ import axios from "axios";
 // });
 
 export default axios.create({
-  baseURL: "https://arsip-sekolah.000webhostapp.com/",
+  baseURL: "https://arsip-sekolah.000webhostapp.com/api/",
   headers: {
     "Content-Type": "application/x-www-form-urlencoded",
     "X-Requested-With": "XMLHttpRequest",

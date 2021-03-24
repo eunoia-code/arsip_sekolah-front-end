@@ -46,6 +46,8 @@ Vue.use(VueHtmlToPaper, options)
 Vue.config.productionTip = false;
 
 Vue.prototype.$api = api;
+axios.defaults.headers.post['header1'] = 'value' // for POST requests
+axios.defaults.headers.common['header1'] = 'value' // for all requests
 
 Vue.filter('format_tanggal', (value:any) => {
   if(value){

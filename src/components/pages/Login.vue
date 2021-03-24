@@ -9,6 +9,9 @@
               <div class="border-yellow-700 p-8 border-t-12 bg-yellow-400 mb-6 rounded-lg shadow-lg">
                 <div class="text-center mb-6">
                   <span class="font-hairline mb-6 text-center w-auto text-md font-bold">SILAHKAN LOGIN</span>
+                  <div class="bg-red-500 rounded">
+                    <b>{{this.info}}</b>
+                  </div>
                   <div class="flex block justify-center text-center mx-auto">
                     <img :src="'konkep.png'" class="text-center mt-6 mx-3 h-16" alt="PU">
                     <img :src="'logo.png'" class="text-center mt-6 mx-3 h-16" alt="DPUTR">
@@ -46,37 +49,70 @@ export default {
   data(){
     return {
         username: '',
-        password: ''
+        password: '',
+        info: ''
     }
   },
   methods: {
-    login: function() {
+    login: async function() {
       if (this.username != '' && this.password != '') {
-        this.$api.post('login/', {
-          request: 1,
-          username: this.username,
-          password: this.password
+        await fetch('https://arsip-sekolah.000webhostapp.com/api/login', {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: JSON.stringify({
+            request: 1,
+            username: this.username,
+            password: this.password
+          })
         })
-        .then(function(response) {
-          if (response.data['status'] == 1) {
-            // alert('Login Successfully');
-            console.log(response.data['resp']);
-            localStorage.setItem("loginState", true);
-            localStorage.setItem("username", response.data['resp'][0].username);
-            localStorage.setItem("level", response.data['resp'][0].level);
-            localStorage.setItem("name", response.data['resp'][0].name);
-            localStorage.setItem("id", response.data['resp'][0].id_user);
+          .then(response => response.json())
+          .then(data => {
+            console.log(data['resp'].length);
+            console.log(data['resp']);
+            if(data['resp'].length===0)
+              this.info = 'Whoops! Terjadi Kesalahan, Silahkan Ulangi!'
+            else{
+              this.info = ''
+              localStorage.setItem("loginState", true);
+              localStorage.setItem("username", data['resp'][0].username);
+              localStorage.setItem("level", data['resp'][0].level);
+              localStorage.setItem("name", data['resp'][0].name);
+              localStorage.setItem("id", data['resp'][0].id_user);
 
-            // window.location = `http://localhost:8081/`;
-            window.location = `https://dputr-konkep.vercel.app/`
-            // this.$router.push('/')
-          } else {
-            alert("User does not exist");
-          }
-        })
-        .catch(function(error) {
-          console.log(error);
-        });
+              // window.location = `http://localhost:8081/`;
+              window.location = `https://dputr-konkep.vercel.app/`
+              // this.$router.push('/')
+            }
+
+          });
+        // this.$api.post('login/', {
+        //   request: 1,
+        //   username: this.username,
+        //   password: this.password
+        // })
+        // .then(function(response) {
+        //   if (response.data['status'] == 1) {
+        //     // alert('Login Successfully');
+        //     console.log(response.data['resp']);
+        //     localStorage.setItem("loginState", true);
+        //     localStorage.setItem("username", response.data['resp'][0].username);
+        //     localStorage.setItem("level", response.data['resp'][0].level);
+        //     localStorage.setItem("name", response.data['resp'][0].name);
+        //     localStorage.setItem("id", response.data['resp'][0].id_user);
+        //
+        //     window.location = `http://localhost:8081/`;
+        //     // window.location = `https://dputr-konkep.vercel.app/`
+        //     // this.$router.push('/')
+        //   } else {
+        //     alert("User does not exist");
+        //   }
+        // })
+        // .catch(function(error) {
+        //   console.log(error);
+        // });
       } else {
         alert('Please enter username & password');
       }

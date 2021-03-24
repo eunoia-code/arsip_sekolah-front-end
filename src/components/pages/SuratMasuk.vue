@@ -14,7 +14,7 @@
       </div>
     </div>
     <v-card-title>
-      Data Surat Masuk {{levelStat}}
+      Data Surat Masuk
       <v-spacer></v-spacer>
       <button @click="toggleAddModal" v-if="levelStat===1" class="bg-blue-500 hover:bg-blue-700 text-white px-2 rounded">
         <i class="fa fa-plus"></i> Tambah Data
