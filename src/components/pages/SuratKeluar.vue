@@ -60,7 +60,7 @@
             <td class="align-top">{{row.item.tanggal_surat | format_tanggal}}</td>
             <td class="align-top" style="width:auto">
               <div class="flex justify-center">
-                <a :href="'http://localhost:8080/uploads/surat_keluar/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
+                <a :href="base_url+'/uploads/surat_keluar/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
                     <i class="fas fa-file-pdf"></i>
                 </a>
                 <button v-if="levelStat===1" class="text-black bg-teal-500 border border-solid border-teal-600 font-bold hover:bg-teal-400 active:bg-teal-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="showDataSuratKeluar(row.item)" title="Lihat Data">
@@ -238,7 +238,7 @@
                   <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="nomor_surat">
                     Nomor Surat
                   </label>
-                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="enomor_surat" type="text" placeholder="Nomor Surat" v-model="editData.nomor_surat" disabled required>
+                  <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:shadow-outline hover:shadow-outline" id="enomor_surat" type="text" placeholder="Nomor Surat" v-model="editData.nomor_surat" required>
                   <!-- <p class="text-red-500 text-xs italic">Please fill out this field.</p> -->
                 </div>
                 <div class="w-full md:w-1/2 px-3">
@@ -509,6 +509,8 @@ export default {
   },
   data () {
     return {
+      base_url: 'https://arsip-sekolah.000webhostapp.com',
+    // base_url: 'http://localhost:8080',
       addModal: false,
       editModal: false,
       showModal: false,
@@ -554,27 +556,41 @@ export default {
     }
   },
   methods: {
-    getData: function(){
-        this.$api.get('surat_keluar')
-        .then(response => (this.surat_keluar_data = response.data['data']))
-        .catch(error => console.log(error));
+    getData: async function(){
+        // this.$api.get('surat_keluar')
+        // .then(response => (this.surat_keluar_data = response.data['data']))
+        // .catch(error => console.log(error));
+
+        var requestOptions = {
+          method: 'GET',
+          redirect: 'follow'
+        };
+
+        await fetch("https://arsip-sekolah.000webhostapp.com/api/surat_keluar", requestOptions)
+          .then(response => response.text())
+          .then(result => {
+            result = JSON.parse(result);
+            this.surat_keluar_data = result.data
+
+          })
+          .catch(error => console.log('error', error));
     },
     getNomorSurat: function(){
-      this.$api.get('nomor/428')
-        .then(response => {
-          this.nomor_agenda = Number(response.data['data'].nomor_agenda) + 1;
-          this.nomor_surat = '428/' + (this.nomor_agenda<10 ? '0'+this.nomor_agenda : this.nomor_agenda) +'/2021'
-        })
-        .catch(error => console.log(error));
+      // this.$api.get('nomor/428')
+      //   .then(response => {
+      //     this.nomor_agenda = Number(response.data['data'].nomor_agenda) + 1;
+      //     this.nomor_surat = '428/' + (this.nomor_agenda<10 ? '0'+this.nomor_agenda : this.nomor_agenda) +'/2021'
+      //   })
+      //   .catch(error => console.log(error));
     },
     editNomorSurat: function(){
-      this.$api
-        .put(`nomor/428`, {nomor_agenda: this.nomor_agenda})
-        .then(data => {
-          this.getData();
-        }).catch(err => {
-          console.error(err);
-        });
+      // this.$api
+      //   .put(`nomor/428`, {nomor_agenda: this.nomor_agenda})
+      //   .then(data => {
+      //     this.getData();
+      //   }).catch(err => {
+      //     console.error(err);
+      //   });
     },
     toggleAddModal: function(){
       this.addModal = !this.addModal
@@ -587,7 +603,7 @@ export default {
       }
       console.log(this.add_filename);
     },
-    addDataSuratKeluar: function(e){
+    addDataSuratKeluar: async function(e){
       const formData = new FormData();
       if(this.add_filename!=='')
         formData.append("file_dokumen", this.add_filename);
@@ -601,17 +617,34 @@ export default {
       formData.append("tanggal_surat", this.addData.tanggal_surat);
       formData.append("id_user", localStorage.getItem('id'));
 
-      this.$api
-        .post('surat_keluar/', formData).then((data) => {
-          console.log(data);
-          this.getData();
-          this.toggleAddModal();
-          this.editNomorSurat();
-          this.successMessage('ditambahkan');
-          this.reset();
-        }).catch(err => {
-          console.error(err);
-        });
+      var requestOptions = {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow'
+      };
+
+      await fetch("https://arsip-sekolah.000webhostapp.com/api/surat_keluar", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            this.getData();
+            this.toggleAddModal();
+            this.editNomorSurat();
+            this.successMessage('ditambahkan');
+            this.reset();
+        })
+        .catch(error => console.log('error', error));
+
+      // this.$api
+      //   .post('surat_keluar/', formData).then((data) => {
+      //     console.log(data);
+      //     this.getData();
+      //     this.toggleAddModal();
+      //     this.editNomorSurat();
+      //     this.successMessage('ditambahkan');
+      //     this.reset();
+      //   }).catch(err => {
+      //     console.error(err);
+      //   });
 
       e.preventDefault();
     },
@@ -657,7 +690,7 @@ export default {
       }
       this.dateChanged = false;
     },
-    editDataSuratKeluar: function(){
+    editDataSuratKeluar: async function(){
       const formData = new FormData();
       if(this.edit_filename!=='')
         formData.append("file_dokumen", this.edit_filename);
@@ -672,16 +705,31 @@ export default {
       formData.append("file_lama", this.editData.file);
       formData.append("id_user", localStorage.getItem('id'));
 
-      this.$api
-        .post(`/surat_keluar/update/${this.editData.id_surat_keluar}`, formData)
-        .then(data => {
-          console.log(data);
-          this.getData();
-          this.toggleEditModal();
-          this.successMessage('diupdate');
-        }).catch(err => {
-          console.error(err);
-        });
+      var requestOptions = {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow'
+      };
+
+      await fetch("https://arsip-sekolah.000webhostapp.com/api/surat_keluar/update/"+this.editData.id_surat_keluar, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            this.getData();
+            this.toggleEditModal();
+            this.successMessage('diupdate');
+        })
+        .catch(error => console.log('error', error));
+
+      // this.$api
+      //   .post(`/surat_keluar/update/${this.editData.id_surat_keluar}`, formData)
+      //   .then(data => {
+      //     console.log(data);
+      //     this.getData();
+      //     this.toggleEditModal();
+      //     this.successMessage('diupdate');
+      //   }).catch(err => {
+      //     console.error(err);
+      //   });
 
     },
     changeEditDate: function(v){
@@ -691,15 +739,30 @@ export default {
     deleteDataSuratKeluar: function(id){
       this.$confirm("Apakah Kamu yakin ingin menghapus data ini?").then(conf => {
         if(conf){
-          this.$api
-            .delete(`surat_keluar/${id}`)
-            .then(data => {
-              console.log(data);
-              this.getData();
-              this.successMessage('dihapus');
-            }).catch(err => {
-              console.error(err);
+          var requestOptions = {
+            method: 'POST',
+            redirect: 'follow'
+          };
+
+          fetch("https://arsip-sekolah.000webhostapp.com/api/surat_keluar/delete/"+id, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                console.log(result);
+                this.getData();
+                this.successMessage('dihapus');
             })
+            .catch(error => console.log('error', error));
+
+
+          // this.$api
+          //   .delete(`surat_keluar/${id}`)
+          //   .then(data => {
+          //     console.log(data);
+          //     this.getData();
+          //     this.successMessage('dihapus');
+          //   }).catch(err => {
+          //     console.error(err);
+          //   })
         }
       });
     },

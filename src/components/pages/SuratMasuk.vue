@@ -56,7 +56,7 @@
             <td class="align-top">{{row.item.tanggal_surat}}</td>
             <td class="align-top" style="width:auto">
               <div class="flex justify-center">
-                <a :href="'http://localhost:8080/uploads/surat_masuk/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
+                <a :href="base_url+'/uploads/surat_masuk/'+row.item.file" target="_blank" class="text-black bg-blue-500 border border-solid border-blue-600 font-bold hover:bg-blue-400 active:bg-blue-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" title="Lihat Dokumen">
                     <i class="fas fa-file-pdf"></i>
                 </a>
                 <button v-if="levelStat===1" class="text-black bg-yellow-500 border border-solid border-yellow-600 font-bold hover:bg-yellow-400 active:bg-yellow-200 uppercase text-sm py-2 px-4 rounded outline-none focus:outline-none m-1" @click="selectDataSuratMasuk(row.item)" title="Edit Data">
@@ -379,6 +379,8 @@ export default {
   },
   data () {
     return {
+      base_url: 'https://arsip-sekolah.000webhostapp.com',
+      // base_url: 'http://localhost:8080',
       addModal: false,
       editModal: false,
       disposisiModal: false,
@@ -421,33 +423,47 @@ export default {
     }
   },
   methods: {
-    getData: function(){
-      this.$api.get('surat_masuk/')
-        .then(response => (this.surat_masuk_data = response.data['data']))
-        .catch(error => console.log(error));
+    getData: async function(){
+      // this.$api.get('surat_masuk/')
+      //   .then(response => (this.surat_masuk_data = response.data['data']))
+      //   .catch(error => console.log(error));
+
+      var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+
+      await fetch("https://arsip-sekolah.000webhostapp.com/api/surat_masuk", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+          result = JSON.parse(result);
+          this.surat_masuk_data = result.data
+
+        })
+        .catch(error => console.log('error', error));
     },
     getNomorSurat: function(){
-      this.$api.get('nomor/428')
-        .then(response => {
-          this.nomor_agenda = Number(response.data['data'].nomor_agenda) + 1;
-          this.nomor_surat = '428/' + (this.nomor_agenda<10 ? '0'+this.nomor_agenda : this.nomor_agenda) +'/2021'
-        })
-        .catch(error => console.log(error));
+      // this.$api.get('nomor/428')
+      //   .then(response => {
+      //     this.nomor_agenda = Number(response.data['data'].nomor_agenda) + 1;
+      //     this.nomor_surat = '428/' + (this.nomor_agenda<10 ? '0'+this.nomor_agenda : this.nomor_agenda) +'/2021'
+      //   })
+      //   .catch(error => console.log(error));
     },
     editNomorSurat: function(){
-      this.$api
-        .put('nomor/428', {"nomor_agenda": this.nomor_agenda})
-        .then(data => {
-          console.log(data);
-          this.getData();
-        }).catch(err => {
-          console.error(err);
-        });
+      // this.$api
+      //   .put('nomor/428', {"nomor_agenda": this.nomor_agenda})
+      //   .then(data => {
+      //     console.log(data);
+      //     this.getData();
+      //   }).catch(err => {
+      //     console.error(err);
+      //   });
     },
     getKlasifikasi: function(){
-      this.$api.get('referensi')
-        .then(response => (this.klasifikasi = response.data['data']))
-        .catch(error => console.log(error));
+      // this.$api.get('referensi')
+      //   .then(response => (this.klasifikasi = response.data['data']))
+      //   .catch(error => console.log(error));
     },
     toggleAddModal: function(){
       this.getKlasifikasi()
@@ -461,7 +477,7 @@ export default {
       }
       console.log(this.add_filename);
     },
-    addDataSuratMasuk: function(e){
+    addDataSuratMasuk: async function(e){
       const formData = new FormData();
       if(this.add_filename!=='')
         formData.append("file_dokumen", this.add_filename);
@@ -472,17 +488,34 @@ export default {
       formData.append("tanggal_surat", this.addData.tanggal_surat);
       formData.append("id_user", localStorage.getItem('id'));
 
-      this.$api
-        .post('surat_masuk/', formData).then((data) => {
-          // console.log(data);
-          this.getData();
-          this.toggleAddModal();
-          this.editNomorSurat();
-          this.successMessage('ditambahkan');
-          this.reset();
-        }).catch(err => {
-          console.error(err);
-        });
+      var requestOptions = {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow'
+      };
+
+      await fetch("https://arsip-sekolah.000webhostapp.com/api/surat_masuk", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            this.getData();
+            this.toggleAddModal();
+            this.editNomorSurat();
+            this.successMessage('ditambahkan');
+            this.reset();
+        })
+        .catch(error => console.log('error', error));
+
+      // this.$api
+      //   .post('surat_masuk/', formData).then((data) => {
+      //     // console.log(data);
+      //     this.getData();
+      //     this.toggleAddModal();
+      //     this.editNomorSurat();
+      //     this.successMessage('ditambahkan');
+      //     this.reset();
+      //   }).catch(err => {
+      //     console.error(err);
+      //   });
 
       e.preventDefault();
     },
@@ -508,7 +541,7 @@ export default {
       console.log(this.editData);
       this.dateChanged = false;
     },
-    editDataSuratMasuk: function(){
+    editDataSuratMasuk: async function(){
       const formData = new FormData();
       if(this.edit_filename!=='')
         formData.append("file_dokumen", this.edit_filename);
@@ -520,47 +553,88 @@ export default {
       formData.append("tanggal_surat", this.editData.tanggal_surat);
       formData.append("id_user", localStorage.getItem('id'));
 
-      // for (var pair of formData.entries()) {
-      //   console.log(pair[0]+ ', ' + pair[1]);
-      // }
-      this.$api
-        .post(`/surat_masuk/update/${this.editData.id_surat_masuk}`, formData)
-        .then(data => {
-          console.log(data);
-          this.getData();
-          this.toggleEditModal();
-          this.successMessage('diupdate');
-        }).catch(err => {
-          console.error(err);
-        });
+      var requestOptions = {
+        method: 'POST',
+        body: formData,
+        redirect: 'follow'
+      };
+
+      await fetch("https://arsip-sekolah.000webhostapp.com/api/surat_masuk/update/"+this.editData.id_surat_masuk, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            this.getData();
+            this.toggleEditModal();
+            this.successMessage('diupdate');
+        })
+        .catch(error => console.log('error', error));
+
+
+      // this.$api
+      //   .post(`/surat_masuk/update/${this.editData.id_surat_masuk}`, formData)
+      //   .then(data => {
+      //     console.log(data);
+      //     this.getData();
+      //     this.toggleEditModal();
+      //     this.successMessage('diupdate');
+      //   }).catch(err => {
+      //     console.error(err);
+      //   });
     },
     changeEditDate: function(v){
       this.dateChanged ? this.editData.tanggal_surat = v : this.editData.tanggal_surat;
       this.dateChanged = true
     },
-    deleteDataSuratMasuk: function(id){
+    deleteDataSuratMasuk: async function(id){
       this.$confirm("Apakah Kamu yakin ingin menghapus data ini?").then(conf => {
         if(conf){
-          this.$api
-            .delete(`surat_masuk/${id}`)
-            .then(data => {
-              console.log(data);
-              this.getData();
-              this.successMessage('dihapus');
-            }).catch(err => {
-              console.error(err);
+          var requestOptions = {
+            method: 'POST',
+            redirect: 'follow'
+          };
+
+          fetch("https://arsip-sekolah.000webhostapp.com/api/surat_masuk/delete/"+id, requestOptions)
+            .then(response => response.text())
+            .then(result => {
+                console.log(result);
+                this.getData();
+                this.successMessage('dihapus');
             })
+            .catch(error => console.log('error', error));
+
+          // this.$api
+          //   .delete(`surat_masuk/${id}`)
+          //   .then(data => {
+          //     console.log(data);
+          //     this.getData();
+          //     this.successMessage('dihapus');
+          //   }).catch(err => {
+          //     console.error(err);
+          //   })
         }
       });
     },
     getUserList: function(id){
-      this.$api
-        .post('getUserList/'+id)
+      var requestOptions = {
+        method: 'POST',
+        redirect: 'follow'
+      };
+
+      fetch("https://arsip-sekolah.000webhostapp.com/api/getUserList/"+id, requestOptions)
+        .then(response => response.text())
         .then(result => {
-          this.userList = result['data'].status
-        }).catch(err => {
-          console.log(err);
+          result = JSON.parse(result)
+          // console.log(result['status']);
+          this.userList = result['status']
         })
+        .catch(error => console.log('error', error));
+
+      // this.$api
+      //   .post('getUserList/'+id)
+      //   .then(result => {
+      //     this.userList = result['data'].status
+      //   }).catch(err => {
+      //     console.log(err);
+      //   })
     },
     selectDisposisiDataSuratMasuk: function(id){
       this.disposisiData.id_surat_masuk = id
@@ -568,27 +642,55 @@ export default {
       this.toggleDisposisiModal()
     },
     disposisiDataSuratMasuk: function(){
-      this.$api
-        .post(`disposisi/`, {
-            tujuan: `${this.disposisiData.tujuan}`,
-            isi_disposisi: `${this.disposisiData.isi_disposisi}`,
-            catatan: `${this.disposisiData.catatan}`,
-            sifat: `${this.disposisiData.sifat}`,
-            id_surat_masuk: `${this.disposisiData.id_surat_masuk}`,
-            batas_waktu: `${this.disposisiData.batas_waktu}`,
-            id_user: localStorage.getItem('id')
-          }, {
-          headers: {
-            'Content-type': 'application/x-www-form-urlencoded',
-          },
-         })
-        .then((data) => {
-          this.getData();
-          this.toggleDisposisiModal();
-          this.successMessage('didisposisi');
-        }).catch(err => {
-          console.error(err);
-        });
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+      var urlencoded = new URLSearchParams();
+      urlencoded.append("isi_disposisi", this.disposisiData.isi_disposisi);
+      urlencoded.append("tujuan", this.disposisiData.tujuan);
+      urlencoded.append("catatan", this.disposisiData.catatan);
+      urlencoded.append("batas_waktu", this.disposisiData.batas_waktu);
+      urlencoded.append("sifat", this.disposisiData.sifat);
+      urlencoded.append("id_surat_masuk", this.disposisiData.id_surat_masuk);
+      urlencoded.append("id_user", localStorage.getItem('id'));
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: urlencoded,
+        redirect: 'follow'
+      };
+
+      fetch("https://arsip-sekolah.000webhostapp.com/api/disposisi", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+            this.getData();
+            this.toggleDisposisiModal();
+            this.successMessage('didisposisi');
+        })
+        .catch(error => console.log('error', error));
+
+      // this.$api
+      //   .post(`disposisi/`, {
+      //       tujuan: `${this.disposisiData.tujuan}`,
+      //       isi_disposisi: `${this.disposisiData.isi_disposisi}`,
+      //       catatan: `${this.disposisiData.catatan}`,
+      //       sifat: `${this.disposisiData.sifat}`,
+      //       id_surat_masuk: `${this.disposisiData.id_surat_masuk}`,
+      //       batas_waktu: `${this.disposisiData.batas_waktu}`,
+      //       id_user: localStorage.getItem('id')
+      //     }, {
+      //     headers: {
+      //       'Content-type': 'application/x-www-form-urlencoded',
+      //     },
+      //    })
+      //   .then((data) => {
+      //     this.getData();
+      //     this.toggleDisposisiModal();
+      //     this.successMessage('didisposisi');
+      //   }).catch(err => {
+      //     console.error(err);
+      //   });
     },
     disposisiDate: function(v){
       this.disposisiData.batas = v;
@@ -620,7 +722,7 @@ export default {
     }
   },
   mounted() {
-    this.getNomorSurat();
+    // this.getNomorSurat();
     this.getData();
   }
 }

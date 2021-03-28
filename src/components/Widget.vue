@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import axios from 'axios';
-const api_url = 'http://localhost:8080/api/';
+// import axios from 'axios';
+// const api_url = 'http://localhost:8080/api/';
 
 export default {
   name: 'Widget',
@@ -40,42 +40,96 @@ export default {
   },
   methods: {
     getData: function(){
-      let options = {
-        url: `${api_url}countData/suratMasukCount`,
-        method: 'GET'
-      }
+    //   let options = {
+    //     url: `${api_url}countData/suratMasukCount`,
+    //     method: 'GET'
+    //   }
+    //
+    //   this.$api(options)
+    //     .then(response => (this.surat_masuk = response.data['data']))
+    //     .catch(error => console.log(error));
 
-      this.$api(options)
-        .then(response => (this.surat_masuk = response.data['data']))
-        .catch(error => console.log(error));
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
 
-      options = {
-        url: `${api_url}countData/suratKeluarCount`,
-        method: 'GET'
-      }
+    fetch("https://arsip-sekolah.000webhostapp.com/api/countData/suratMasukCount", requestOptions)
+      .then(response => response.text())
+      .then(result => {
+        this.surat_masuk = JSON.parse(result)
+        this.surat_masuk = this.surat_masuk['data']
+        // console.log(this.surat_masuk['data']);
+      })
+      .catch(error => console.log('error', error));
 
-      this.$api(options)
-        .then(response => (this.surat_keluar = response.data['data']))
-        .catch(error => console.log(error));
+    //   options = {
+    //     url: `${api_url}countData/suratKeluarCount`,
+    //     method: 'GET'
+    //   }
+    //
+    //   this.$api(options)
+    //     .then(response => (this.surat_keluar = response.data['data']))
+    //     .catch(error => console.log(error));
 
-      options = {
-        url: `${api_url}countData/disposisiCount`,
-        method: 'GET'
-      }
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
 
-      this.$api(options)
-        .then(response => (this.disposisi = response.data['data']))
-        .catch(error => console.log(error));
+    fetch("https://arsip-sekolah.000webhostapp.com/api/countData/suratKeluarCount", requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      this.surat_keluar = JSON.parse(result)
+      this.surat_keluar = this.surat_keluar['data']
+    })
+    .catch(error => console.log('error', error));
 
-      options = {
-        url: `${api_url}countData/referensiCount`,
-        method: 'GET'
-      }
+    //   options = {
+    //     url: `${api_url}countData/disposisiCount`,
+    //     method: 'GET'
+    //   }
+    //
+    //   this.$api(options)
+    //     .then(response => (this.disposisi = response.data['data']))
+    //     .catch(error => console.log(error));
 
-      this.$api(options)
-        .then(response => (this.referensi = response.data['data']))
-        .catch(error => console.log(error));
-    },
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+
+    fetch("https://arsip-sekolah.000webhostapp.com/api/countData/disposisiCount", requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      this.disposisi = JSON.parse(result)
+      this.disposisi = this.disposisi['data']
+    })
+    .catch(error => console.log('error', error));
+
+    //   options = {
+    //     url: `${api_url}countData/referensiCount`,
+    //     method: 'GET'
+    //   }
+    //
+    //   this.$api(options)
+    //     .then(response => (this.referensi = response.data['data']))
+    //     .catch(error => console.log(error));
+    // },
+
+      var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+
+      fetch("https://arsip-sekolah.000webhostapp.com/api/countData/referensiCount", requestOptions)
+        .then(response => response.text())
+        .then(result => {
+          this.referensi = JSON.parse(result)
+          this.referensi = this.referensi['data']
+        })
+        .catch(error => console.log('error', error));
+    }
   },
   mounted(){
     this.getData();

@@ -56,38 +56,49 @@ export default {
   methods: {
     login: async function() {
       if (this.username != '' && this.password != '') {
-        await fetch('https://arsip-sekolah.000webhostapp.com/api/login', {
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+        var urlencoded = new URLSearchParams();
+        urlencoded.append("username", this.username);
+        urlencoded.append("password", this.password);
+        urlencoded.append("request", "1");
+
+        var requestOptions = {
           method: 'POST',
-          mode: 'cors',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: JSON.stringify({
-            request: 1,
-            username: this.username,
-            password: this.password
-          })
-        })
-          .then(response => response.json())
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: 'follow'
+        };
+
+        fetch("https://arsip-sekolah.000webhostapp.com/api/login", requestOptions)
+          .then(response => response.text())
           .then(data => {
-            console.log(data['resp'].length);
-            console.log(data['resp']);
-            if(data['resp'].length===0)
+            data = JSON.parse(data);
+            let xdata = JSON.parse(data['resp'])
+            // console.log(data);
+            // console.log(xdata);
+            // console.log(xdata.length);
+            if(xdata[0].length===0){
+              // alert("Whoops! Terjadi Kesalahan, Silahkan Ulangi!");
               this.info = 'Whoops! Terjadi Kesalahan, Silahkan Ulangi!'
-            else{
+            }else{
               this.info = ''
               localStorage.setItem("loginState", true);
-              localStorage.setItem("username", data['resp'][0].username);
-              localStorage.setItem("level", data['resp'][0].level);
-              localStorage.setItem("name", data['resp'][0].name);
-              localStorage.setItem("id", data['resp'][0].id_user);
+              localStorage.setItem("username", xdata[0].username);
+              localStorage.setItem("level", xdata[0].level);
+              localStorage.setItem("name", xdata[0].name);
+              localStorage.setItem("id", xdata[0].id_user);
+              alert("Anda Berhasil Masuk");
 
-              // window.location = `http://localhost:8081/`;
-              window.location = `https://dputr-konkep.vercel.app/`
+              window.location = `http://localhost:8081/`;
+              // window.location = `https://dputr-konkep.vercel.app/`
               // this.$router.push('/')
             }
+          })
+          .catch(error => console.log('error', error));
 
-          });
+          
         // this.$api.post('login/', {
         //   request: 1,
         //   username: this.username,

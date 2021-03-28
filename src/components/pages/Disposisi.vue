@@ -221,14 +221,28 @@ export default {
     }
   },
   methods: {
-    getData: function(){
+    getData: async function(){
       const id = localStorage.getItem('id');
 
-      this.$api.get('disposisi/'+id)
-        .then(response => {
-          this.disposisi_data = response['data'].data
+      var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+      };
+
+      await fetch("https://arsip-sekolah.000webhostapp.com/api/disposisi/"+id, requestOptions)
+        .then(response => response.text())
+        .then(result => {
+          result = JSON.parse(result);
+          this.surat_masuk_data = result.data
+
         })
-        .catch(error => console.log(error));
+        .catch(error => console.log('error', error));
+
+      // this.$api.get('disposisi/'+id)
+      //   .then(response => {
+      //     this.disposisi_data = response['data'].data
+      //   })
+      //   .catch(error => console.log(error));
     },
     toggleAddModal: function(){
       this.addModal = !this.addModal
