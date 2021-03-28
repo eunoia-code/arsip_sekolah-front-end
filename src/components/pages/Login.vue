@@ -91,14 +91,14 @@ export default {
               localStorage.setItem("id", xdata[0].id_user);
               alert("Anda Berhasil Masuk");
 
-              window.location = `http://localhost:8081/`;
-              // window.location = `https://dputr-konkep.vercel.app/`
+              // window.location = `http://localhost:8081/`;
+              window.location = `https://dputr-konkep.vercel.app/`
               // this.$router.push('/')
             }
           })
           .catch(error => console.log('error', error));
 
-          
+
         // this.$api.post('login/', {
         //   request: 1,
         //   username: this.username,
